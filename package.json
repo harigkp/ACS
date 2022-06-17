@@ -1,0 +1,20 @@
+{
+    "name": "acs-ecommerce",
+    "version": "1.0.0",
+    "description": "ACS e-commerce project",
+    "author": "parvez alam",
+    "licence": "MIT",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "dependencies": {
+        "bootstrap": "^4.3.1",
+        "feather-icons": "^4.19.0",
+        "jquery": "^3.4.1",
+        "popper.js": "^1.14.7"
+    },
+    "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.7.2"
+    }
+}
