@@ -36,6 +36,7 @@ class ProductController
 
 	public function postStore()
 	{ 
+		
 		$title          = $_POST['title'];
 		$categoryid     = $_POST['category_id'];
 		$brandid        = $_POST['brand_id'];
@@ -76,7 +77,11 @@ class ProductController
 
 			$_SESSION['validator-errors'] = $validator->errors()->all();
 
-			redirect('/dashboard/products/create');
+			$outputdata = array( 'code' => '500','message' => 'something wrong');							
+			echo json_encode($outputdata);die;
+			
+			
+			//redirect('/dashboard/products/create');
 		}
 		
 		$imgrandname 	= 'product-'.time();
@@ -114,9 +119,8 @@ class ProductController
 			$_SESSION['validator-errors'] 	= NULL;
 			$_SESSION['success'] 			= 'Product created successfully.'; 
 
-			redirect('/dashboard/products');
+			//redirect('/dashboard/products');
 			
-			$_SESSION['error']  = 'Invalid password.';
 			$outputdata = array( 'code' => '200','message' => $_SESSION['success']);							
 			echo json_encode($outputdata);die;
 
@@ -125,7 +129,9 @@ class ProductController
 			$_SESSION['success'] = NULL;
 			$_SESSION['error'] 	 = $e->getMessage();
 
-			redirect('/dashboard/products/create');
+			//redirect('/dashboard/products/create');
+			$outputdata = array( 'code' => '500','message' => 'something wrong');							
+			echo json_encode($outputdata);die;
 		}
 	}
 
@@ -154,7 +160,7 @@ class ProductController
 		$saleprice      = $_POST['sale_price'];
 		$size           = $_POST['size'];
 		$gender         = $_POST['gender'];		
-		$image      	= $_POST['image'];
+
 		$slug           = createSlug($_POST['title']);
 		$image      	= $_FILES['image'];
 
@@ -185,7 +191,10 @@ class ProductController
 
 			$_SESSION['validator-errors'] = $validator->errors()->all();
 
-			redirect('/dashboard/products/edit/'.$id);
+           $outputdata = array( 'code' => '500','message' => 'something wrong');							
+			echo json_encode($outputdata);die;
+
+			//redirect('/dashboard/products/edit/'.$id);
 		}
 		
         $active 		= isset($_POST['active']) ? true : false;
@@ -232,8 +241,11 @@ class ProductController
         $_SESSION['error'] 				= NULL;
         $_SESSION['validator-errors'] 	= NULL;
         $_SESSION['success'] 			= 'Product updated successfully.'; 
+		
+		$outputdata = array( 'code' => '200','message' => $_SESSION['success']);							
+		echo json_encode($outputdata);die;
 
-        redirect('/dashboard/products');
+        //redirect('/dashboard/products');
     }
 
 	public function getDelete($id = null)
@@ -247,7 +259,7 @@ class ProductController
 		if(file_exists($product->image)) {
 			unlink($product->image);
 		}
-		$product->delete();
+
 
 		foreach ($product->images as $gallery) {
 			if(file_exists($gallery->image)) {
@@ -255,10 +267,13 @@ class ProductController
 			}
 		}
 		$product->images()->delete();
+		
+		$product->delete();
 
 		$_SESSION['success'] = 'Product deleted successfully.'; 
 
-		redirect('/dashboard/products');
+		$outputdata = array( 'code' => '200','message' => $_SESSION['success']);							
+		echo json_encode($outputdata);die;
 	}
 
 	public function getGalleryDelete($id = null)
