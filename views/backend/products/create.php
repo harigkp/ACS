@@ -1,7 +1,7 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                 <h1 class="h2">Create Products</h1>
                 <div class="mb-2 mb-md-0">
-                    <a id="pro" href="javascript:void(0);"  onclick="return product_create('pro');" class="btn btn-sm btn-outline-secondary rounded-0">Back</a>
+                    <span id="errorc" style="color:red;"><span>
                 </div>
             </div>
 
@@ -114,7 +114,7 @@
                 <div class="form-group row">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-10">
-                        <button type="button" id="prodbutton" class="btn btn-primary rounded-0">Create</button>
+                        <button type="button" id="prodbutton" class="btn btn-primary rounded-0">Create</button> <span id="loaderID" style="color:red;display:none;">Please wait<img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span>
                     </div>
                 </div>
             </form>
@@ -168,19 +168,27 @@ jQuery(document).ready(function($){
 		$('.prodsizeerror').html();
 		$('.gendererror').html();
 		
-		let data = new FormData($("#my_form")[0]);
-
+		let data = new FormData($("#frmid")[0]);
+          $('#loaderID').show();
 		  $.ajax({
 			url: 'dashboard/products/store',
 			type: 'POST',
 			data: data,
 			processData: false,
 			contentType: false,
-			success: function(r) {
-			  console.log('success', r);
+			success: function(response) {
+					$('#loaderID').hide();
+					var objJSON = JSON.parse(response);
+					
+				   if(objJSON.code==200){					 
+						 $('#pro').click();
+					 }else{
+						 $("#errorc").html(objJSON.message);
+						 
+					 }
 			},
-			error: function(r) {
-			  console.log('error', r);
+			error: function(response) {
+			  console.log('error', response);
 			}
 		  });
 		

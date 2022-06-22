@@ -160,7 +160,7 @@ class HomeController
 					$audience_claim = $user->name;
 					$issuedat_claim = time(); // issued at
 					$notbefore_claim = $issuedat_claim + 10; //not before in seconds
-					$expire_claim = $issuedat_claim + 120; // expire time in seconds
+					$expire_claim = $issuedat_claim + 240; // expire time in seconds
 					$token = array(
 							"iss" => $issuer_claim,
 							"aud" => $audience_claim,
@@ -210,7 +210,7 @@ class HomeController
 	}
 
 
-function getCheckuser(){
+    function getCheckuser(){
        ob_start();
        @session_start();
 	   
@@ -260,15 +260,26 @@ function getCheckuser(){
 
 	$secret_key  = md5($_SESSION['uname'].$_SESSION['userid']);
 	$decoded = JWT::decode($jwt, $secret_key,array('HS256'));
+//echo "------".$decoded->data->id.'-----jwt--'.$jwt;
 
-	if($decoded->data->id){
-		/* Refresh Token */
+if(!$decoded->data->id){
+	unset($_SESSION['login']);
+		unset($_SESSION['userid']);
+		unset($_SESSION['jwttoken']);
+
+		$_SESSION['success'] 	= 'You have been logout.';
+		$_SESSION['error'] 		= NULL;
+
+		redirect('/login');
+	
+}else{
+/* Refresh Token */
 					
 					$issuer_claim = 'http://localhost/'; 
 					$audience_claim = $_SESSION['uname'];
 					$issuedat_claim = time(); // issued at
 					$notbefore_claim = $issuedat_claim + 10; //not before in seconds
-					$expire_claim = $issuedat_claim + 120; // expire time in seconds
+					$expire_claim = $issuedat_claim + 240; // expire time in seconds
 					$token = array(
 							"iss" => $issuer_claim,
 							"aud" => $audience_claim,
@@ -291,9 +302,15 @@ function getCheckuser(){
                         'token' => $jwt
                     ];
                     $_SESSION['jwttoken']  	= $jwt;
+					
+					
 	
-	               /* End refresh Token */
-	} 	
+	               /* End refresh Token */	
+	
+	
+}
+
+	
 	
 	 
  }
@@ -466,15 +483,15 @@ function getCheckuser(){
 
 
 
-		/*
-		 *	Encode array into JSON
-		*/
-		function json($data){
-			if(is_array($data)){
-				//return json_encode($data, JSON_UNESCAPED_SLASHES);
-				return json_encode($data);
-			}
+	/*
+	 *	Encode array into JSON
+	*/
+	public function json($data){
+		if(is_array($data)){
+			//return json_encode($data, JSON_UNESCAPED_SLASHES);
+			return json_encode($data);
 		}
+	}
 
 
 

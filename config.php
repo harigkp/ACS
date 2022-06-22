@@ -7,18 +7,6 @@ require_once 'vendor/autoload.php';
  
  $capsule = new Capsule;
  
- 
-
-/*      $this->set('db', $capsule->getConnection($conn));
-     //set model conn for all models
-     $resolver = new \Illuminate\Database\ConnectionResolver();
-     $resolver->addConnection($this->connName, $capsule->getConnection($conn));
-     $resolver->setDefaultConnection($conn);
-     \Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver); */
- 
- 
- 
- 
  $capsule->addConnection([
     'driver'    => 'mysql',
     'host'      => 'localhost',

@@ -1,21 +1,12 @@
-<?php backendpartials('header'); ?>
 
-<div class="container-fluid">
-    <div class="row">
-
-        <?php backendpartials('sidebar'); ?>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                 <h1 class="h2">Edit Product</h1>
-                <div class="mb-2 mb-md-0">
-                    <a href="/dashboard/products" class="btn btn-sm btn-outline-secondary rounded-0">Back</a>
-                </div>
+                
             </div>
 
             <?php backendpartials('validator'); ?>
 
-            <form action="/dashboard/products/update" method="POST" enctype="multipart/form-data">
+            <form action="/dashboard/products/update" method="POST" id="frmid" enctype="multipart/form-data">
 
                 <input type="hidden" name="id" value="<?php echo $product->id; ?>">
                 
@@ -131,13 +122,86 @@
                 <div class="form-group row">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary rounded-0">Edit</button>
+                        <button type="button" id="prodbutton" class="btn btn-primary rounded-0">Update</button> <span id="loaderID" style="color:red;display:none;">Please wait<img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span>
                     </div>
                 </div>
             </form>
+			
+			<script>
+jQuery(document).ready(function($){
 
-        </main>
-    </div>
-</div>
+    $('#prodbutton').on('click', function(){
 
-<?php backendpartials('footer'); ?>
+		var title = $('#title').val();
+		var descp = $('#descp').val();
+		var price = $('#price').val();
+		var saleprice = $('#saleprice').val();
+		var prodsize = $('#prodsize').val();
+		var prodgender = $('#prodgender').val();
+		var category_id = $('#category_id').val();
+		var brand_id = $('#brand_id').val();
+
+				
+		if(title==""){			
+			$('.titleerror').html("The title field is required.");
+			return  false;
+		}
+		if(descp==""){			
+			$('.descperror').html("The description field is required.");
+			return  false;
+		}
+		if(price==""){			
+			$('.priceerror').html("The price field is required.");
+			return  false;
+		}
+		if(saleprice==""){			
+			$('.salepriceerror').html("The sale price field is required.");
+			return  false;
+		}
+		if(prodsize==""){				
+			$('.prodsizeerror').html("The size field is required.");
+			return  false;
+		}
+		if(prodgender==""){				
+			$('.gendererror').html("The gender field is required.");
+			return  false;
+		}				
+		$('.titleerror').html();
+		$('.categoryerror').html();
+		$('.branderror').html();
+		$('.descperror').html();
+		$('.priceerror').html();
+		$('.salepriceerror').html();
+		$('.prodsizeerror').html();
+		$('.gendererror').html();
+		
+		let data = new FormData($("#frmid")[0]);
+          $('#loaderID').show();
+		  $.ajax({
+			url: 'dashboard/products/update',
+			type: 'POST',
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+					$('#loaderID').hide();
+					var objJSON = JSON.parse(response);
+					
+				   if(objJSON.code==200){					 
+						 $('#pro').click();
+					 }else{
+						 $("#errorc").html(objJSON.message);
+						 
+					 }
+			},
+			error: function(response) {
+			  console.log('error', response);
+			}
+		  });
+		
+  });
+
+});		
+		
+		
+</script>

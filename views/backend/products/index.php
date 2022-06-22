@@ -1,8 +1,6 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                 <h1 class="h2">Products</h1>
-                <div class="mb-2 mb-md-0">
-                    <a href="/dashboard/products/create" class="btn btn-sm btn-outline-success rounded-0">Create</a>
-                </div>
+                
             </div>
 
             <div class="table-responsive">
@@ -58,12 +56,11 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="/dashboard/products/edit/<?php echo $product->id; ?>" class="badge badge-warning rounded-0 text-white">
+                                <a id="proe" href="javascript:void(0);" onclick="return product_edit(<?php echo $product->id; ?>);"  class="badge badge-warning rounded-0 text-white">
                                     <span data-feather="edit">Edit</span>
                                 </a>
-                                <a href="/dashboard/products/delete/<?php echo $product->id; ?>" class="badge badge-danger rounded-0" 
-                                    onclick=" return confirm('Are you sure, you want to delete product!');">
-                                    <span data-feather="trash-2">Delete</span>
+                                <a  id="dash" href="javascript:void(0);"  onclick="return product_del(<?php echo $product->id; ?>);" class="badge badge-danger rounded-0">
+                                    <span data-feather="trash-2">Delete</span><span id="loaderID" style="color:red;display:none;"><img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span>
                                 </a>
                             </td>
                         </tr>
@@ -71,3 +68,35 @@
                     </tbody>
                 </table>
             </div>
+			
+<script>			
+function product_del(deleteID){
+	var chk = confirm('Are you sure, you want to delete product!');
+	if(chk){
+		$('#loaderID').show();
+
+		 $.ajax({
+			url: "/dashboard/products/delete/"+deleteID,
+			type: "get",
+			data: {},
+			success: function (response) {
+				$('#loaderID').hide();
+				//var objJSON = JSON.parse(response);
+                 var objJSON = JSON.parse(JSON.stringify(response));
+                // alert(objJSON.code)
+
+
+				//if(objJSON.code==200){					 
+					 $('#pro').click();
+				//}else{
+					// $("#errorc").html(objJSON.message);
+					 
+				// }
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+			   console.log(textStatus, errorThrown);
+			}
+		});
+	}
+}
+</script>

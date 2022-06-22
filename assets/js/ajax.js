@@ -55,7 +55,7 @@ function defaiult_load(){
 
 /* For dashboard */
 function dashboard(linkid){
-	
+	checkAuth();
 	$('#loaderID').show();
 	$('.nav-item a.active').removeClass('active');
 	$('#'+linkid).addClass('active');	
@@ -81,7 +81,7 @@ function dashboard(linkid){
 
 /* For Orders */
 function orders(linkid){
-	
+	checkAuth();
 	$('#loaderID').show();
 	$('.nav-item a.active').removeClass('active');
 	$('#'+linkid).addClass('active');	
@@ -111,7 +111,7 @@ function orders(linkid){
 
 /* For Categories */
 function category(linkid){
-	
+	checkAuth();
 	$('#loaderID').show();
 	$('.nav-item a.active').removeClass('active');
 	$('#'+linkid).addClass('active');	
@@ -136,10 +136,9 @@ function category(linkid){
 }
 
 
-
 /* For Products */
 function product(linkid){
-	
+	checkAuth();
 	$('#loaderID').show();
 	$('.nav-item a.active').removeClass('active');
 	$('#'+linkid).addClass('active');	
@@ -165,7 +164,7 @@ function product(linkid){
 
 
 function product_create(linkid){
-	
+	checkAuth();
 	$('#loaderID').show();
 	$('#'+linkid).addClass('active');	
 
@@ -188,21 +187,25 @@ function product_create(linkid){
 	
 }
 
-function product_create_submit(linkid){
-	
-	$('#loaderID').show();
-	$('#'+linkid).addClass('active');	
+function product_edit(editID){
+	checkAuth();
+	$('#loaderID').show();	
 
-		$.ajax({
-			url: '/dashboard/products/store',
-			data: $('#file').attr('files'),
-			cache: false,
-			contentType: 'multipart/form-data',
-			processData: false,
-			type: 'POST',
-			success: function(data){
-				alert(data);
-			}
-		});
+	 $.ajax({
+        url: "/dashboard/products/edit/"+editID,
+        type: "get",
+        data: {},
+        success: function (response) {
+
+			 $('#loaderID').hide();
+           var objJSON = JSON.parse(JSON.stringify(response));
+		   $("#display_data").html(objJSON);
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
 	
 }
