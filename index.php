@@ -46,9 +46,22 @@ $router->group(['prefix' => 'dashboard', 'before' => 'auth'], function(RouteColl
     $router->controller('/', DashboardController::class);
     $router->controller('/categories', CategoryController::class);
     $router->controller('/products', ProductController::class);
+	$router->get('/products/store', function () {
+        
+         return '';
+     });
+
 });
 
 
+
+
+/* $router->group(['prefix' => 'dashboard', 'before' => 'auth'], function(RouteCollector $router){
+	     $router->controller('/products/store', ProductController::function);
+         $pcontroller = new ProductController();
+         $content = $pcontroller->store();
+        // return $content;
+}); */
 //$router->controller('/user/allusers', UserController::class->getallusers());
 
 $router->get('/user/allusers', function () {
