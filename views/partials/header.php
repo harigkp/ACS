@@ -5,6 +5,7 @@ if($_SESSION['admin']==0){
 }else{
 	$txt = '<a class="py-2 d-none d-md-inline-block" href="/dashboard">Admin</a>';
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +27,7 @@ if($_SESSION['admin']==0){
 				</a>
 				<a class="py-2 d-none d-md-inline-block" href="/">Home</a>
 				<a class="py-2 d-none d-md-inline-block" href="/productlist">Products</a>
-				<a class="py-2 d-none d-md-inline-block" href="/cart">Cart</a>
+				<a class="py-2 d-none d-md-inline-block" href="/cart">Cart <span style="color: #fff;">(<?php echo count($_SESSION['cart']);?>)</span></a>
 
 				<?php if(isset($_SESSION['login'])): ?>
 					<a class="py-2 d-none d-md-inline-block" href="/checkout">Checkout</a>

@@ -16,9 +16,10 @@ function checkAuth(){
 
 			 $('#loaderID').hide();
            var objJSON = JSON.parse(JSON.stringify(response));	   		   
-		   /* if(objJSON.code==200 && objJSON.code !="Access granted"){
+		   
+		    if(objJSON.code==401){
 			   window.location.href = '/login';
-		   } */
+		     } 
         },
         error: function(jqXHR, textStatus, errorThrown) {
            //console.log(textStatus, errorThrown);
@@ -200,6 +201,41 @@ function product_edit(editID){
 			 $('#loaderID').hide();
            var objJSON = JSON.parse(JSON.stringify(response));
 		   $("#display_data").html(objJSON);
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
+	
+}
+
+
+
+/* Update quantity */
+
+function updatecart(changeq,unit_price,product_id){
+	
+	
+	
+	checkAuth();
+	$('#loading').show();
+
+	 $.ajax({
+        url: "/cart/updatecart",
+        type: "post",
+        data: {'changeq': changeq,'unit_price': unit_price,'product_id': product_id },
+        success: function (response) {
+
+			 $('#loading').hide();
+           var objJSON = JSON.parse(response);
+		   
+		   if(objJSON.code==200){
+			   
+			   window.location.href = '/cart';
+			   
+		   }
 		   		   
 		  // alert(objJSON)
         },

@@ -3,7 +3,7 @@
 
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">E-COMMERCE CHECKOUT</h1>
+        <h1 class="jumbotron-heading">E-COMMERCE CHECKOUT <span id="errorc" style="color:red;"><span></h1>
     </div>
 </section>
 
@@ -49,30 +49,46 @@
         <div class="col-md-8 order-md-1 mb-4">
             <h4 class="mb-3">Billing address</h4>
 
-            <form class="needs-validation" action="/checkout/shipping" method="post">
+            <form class="needs-validation" id="frmid" action="/checkout/shipping" method="post">
 
                 <div class="mb-3">
                     <label for="firstName">First name</label>
-                    <input type="text" class="form-control" id="firstName" name="name" value="<?php echo $user->name; ?>" required="">
+                    <input type="text" class="form-control" id="firstName" name="name" disabled value="<?php echo $user->name; ?>" required="">
                 </div>
 
                 <div class="mb-3">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="<?php echo $user->email; ?>">
+                    <input type="email" class="form-control" id="email" disabled name="email" value="<?php echo $user->email; ?>">
                 </div>
 
                 <div class="mb-3">
                     <label for="phone">Phone Number</label>
-                    <input type="text" class="form-control" id="phone" name="phone">
+                    <input type="text" class="form-control" id="phone" name="phone" required="">
+					<small class="form-text text-danger phoneerror"></small> 
                 </div>
 
                 <div class="mb-3">
                     <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" name="address" required="">
+                    
+					<div class="input-group mb-3">
+					  <select class="custom-select" id="addresslist" name="addresslist">
+					  <?php foreach ($alluseradd as $alluseradd) : ?>
+						<option value="<?php echo $alluseradd->id; ?>"><?php echo $alluseradd->address; ?></option>
+                      <?php endforeach; ?>						
+					  </select>
+					  
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModalLong">Create Address</button>
+					  </div>
+					</div>
+					
+					<small class="form-text text-danger addresserror2"></small>
+					
+					
                 </div>
-
+				
                 <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                <button class="btn btn-primary btn-lg btn-block" id="checkoutbutton" type="button">Continue to checkout</button>
             </form>
         </div>
 
@@ -80,3 +96,138 @@
 </div>
 
 <?php include_once('partials/footer.php'); ?>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <form class="needs-validation" id="frmaddid" action="/checkout/address" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><h3>Billing Address</h3></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+   
+		<input type="hidden" name="user_id" value="<?php echo $user->id; ?>"/>
+		<div class="mb-3">
+			<input type="text" class="form-control" id="address" placeholder="1234 Main St" name="address" required="">
+			<small class="form-text text-danger addresserror"></small>
+		</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="addressbutton">Save changes</button>
+      </div>
+    </div>
+	</form>
+  </div>
+</div>
+
+
+
+
+<script>
+jQuery(document).ready(function($){
+
+    $('#checkoutbutton').on('click', function(){
+		var phoneNumberPattern = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+
+		
+		var phone = $('#phone').val();
+		var addresslist = $('#addresslist').val();
+		alert(addresslist);
+		alert(phone.length);
+		if(phone==""){
+			$('.phoneerror').html("The phone field is required.");
+			return  false;			
+		}else{
+			$('.phoneerror').html("");
+		}
+		if (phoneNumberPattern.test(phone)) {
+			if(phone.length==='10'){
+				$('.phoneerror').html("Please enter valid phone number.");
+				return  false;			
+			}		
+		}
+		if(addresslist==""){
+			$('.addresserror2').html("The address field is required.");
+			return  false;			
+		}	
+		
+
+		let data = new FormData($("#frmid")[0]);
+          $('#loaderID').show();
+		  $.ajax({
+			url: '/checkout/shipping',
+			type: 'POST',
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+					$('#loaderID').hide();
+					var objJSON = JSON.parse(response);
+					
+				   if(objJSON.code==200){					 
+						 window.location.href = '/';
+					 }else{
+						 $("#errorc").html(objJSON.message);
+						 
+					 }
+			},
+			error: function(response) {
+			  console.log('error', response);
+			}
+		  });
+		
+  });
+  
+  
+  /* Create address*/
+  
+     $('#addressbutton').on('click', function(){
+		
+		var address = $('#address').val();
+		if(address==""){
+			$('.addresserror').html("The address field is required.");
+			return  false;			
+		}			
+		
+
+		let data1 = new FormData($("#frmaddid")[0]);
+          $('#loaderID').show();
+		  $.ajax({
+			url: '/checkout/uaddress',
+			type: 'POST',
+			data: data1,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+			var objJSON = JSON.parse(response);
+	
+					$('#loaderID').hide();
+					var objJSON = JSON.parse(response);
+					
+				   if(objJSON.code==200){					 
+						 window.location.href = '/checkout';
+					 }else{
+						 $("#errorc").html(objJSON.message);
+						 
+					 }
+			},
+			error: function(response) {
+			  console.log('error', response);
+			}
+		  });
+		
+  }); 
+  
+  
+
+});		
+		
+		
+</script>

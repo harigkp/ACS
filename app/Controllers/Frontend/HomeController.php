@@ -259,21 +259,12 @@ class HomeController
 	\Firebase\JWT\JWT::$leeway = 20;
 
 	$secret_key  = md5($_SESSION['uname'].$_SESSION['userid']);
-	$decoded = JWT::decode($jwt, $secret_key,array('HS256'));
+	
 //echo "------".$decoded->data->id.'-----jwt--'.$jwt;
 
-if(!$decoded->data->id){
-	unset($_SESSION['login']);
-		unset($_SESSION['userid']);
-		unset($_SESSION['jwttoken']);
-
-		$_SESSION['success'] 	= 'You have been logout.';
-		$_SESSION['error'] 		= NULL;
-
-		redirect('/login');
-	
-}else{
-/* Refresh Token */
+try { 
+                 $decoded = JWT::decode($jwt, $secret_key,array('HS256'));
+      /* Refresh Token */
 					
 					$issuer_claim = 'http://localhost/'; 
 					$audience_claim = $_SESSION['uname'];
@@ -306,8 +297,19 @@ if(!$decoded->data->id){
 					
 	
 	               /* End refresh Token */	
-	
-	
+       $outputdata = array( 'code' => '200','message' => 'Refresh Token.');							
+	   echo json_encode($outputdata);die;
+} 
+catch (\Firebase\JWT\ExpiredException $e) { 
+
+		unset($_SESSION['login']);
+		unset($_SESSION['userid']);
+		unset($_SESSION['jwttoken']);
+
+		$_SESSION['success'] 	= 'You have been logout.';
+		$_SESSION['error'] 		= NULL;
+        $outputdata = array( 'code' => '401','message' => 'Logout.');							
+	    echo json_encode($outputdata);die;
 }
 
 	

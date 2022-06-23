@@ -5,6 +5,9 @@
         <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
     </div>
 </section>
+<div id="loading" align="center" style="display:none">
+  <img id="loading-image" src="../assets/images/loading-page.gif" width="70" height="70" alt="Loading..." />
+</div>
 
 <div class="container mb-4">
     <div class="row">
@@ -32,7 +35,7 @@
                                 <td><img width="30px" src="<?php echo $product['image']; ?>" /> </td>
                                 <td><?php echo $product['title']; ?></td>
                                 <td>In stock</td>
-                                <td><input class="form-control" type="text" value="<?php echo $product['quantity']; ?>" /></td>
+                                <td><input class="form-control" type="text" value="<?php echo $product['quantity']; ?>" onchange="return updatecart(this.value,<?php echo $product['unit_price']; ?>,<?php echo $id; ?>);" /></td>
                                 <td class="text-right">$<?php echo $product['unit_price']; ?></td>
                                 <td class="text-right">$<?php echo $product['total_price']; ?></td>
                                 <td class="text-right">

@@ -61,6 +61,43 @@ class CartController
 		redirect('/cart');
 	}
 
+
+	public function postUpdatecart() 
+	{
+		$id = (int) $_POST['product_id'];
+		$changeq = (int) $_POST['changeq'];
+        $unit_price = $_POST['unit_price'];
+
+		$cart = $_SESSION['cart'] ?? [];
+
+		$product = Product::find($id);
+
+		if (empty($product)) {
+
+			redirect('/');
+
+		} else {
+			
+			if(array_key_exists($id, $cart)) {
+					
+					$actualquantity = $changeq - $cart[$id]['quantity'];
+					$cart[$id]['quantity'] = $cart[$id]['quantity']+$actualquantity; 
+				    $cart[$id]['total_price'] = $unit_price * $cart[$id]['quantity']; 
+				
+			}		
+
+		}
+
+		$_SESSION['cart'] = $cart;
+
+		$outputdata = array( 'code' => '200','message' => 'Successful Updated');							
+	    echo json_encode($outputdata);die;	
+	}
+
+
+
+
+
 	public function postRemove()
 	{
 		$id = (int) $_POST['product_id'];
