@@ -11,7 +11,7 @@
                         <th>Order ID</th>
                         <th>Product</th>
                         <th>Quantity</th>
-                        <th>Price</th>
+                        <th>Unit Price</th>
 						<th>Order Status</th>
 						<th>Order By</th>
                         </tr>

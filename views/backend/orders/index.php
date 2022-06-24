@@ -17,25 +17,34 @@
                         <tr>
                         <th>#</th>
                         <th>Order ID</th>
-                        <th>Product ID</th>
+                        <th>Product</th>
                         <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Invoice</th>
+                        <th>Unit Price</th>
+						<th>Order Status</th>
+						<th>Order By</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($orders as $order) : ?>
+                        <?php foreach($orders as $order) : 
+						
+						$i=0;
+							$product = $product::find($order->product_id);
+
+                            $user = $user::find($order->user_id);
+						
+						
+						?>
 						
                         <tr>
                             <td><?php echo $order->id; ?></td>
                             <td><?php echo $order->order_id; ?></td>
-                            <td><?php echo $order->product_id; ?></td>
+                            <td><?php echo $product->title; ?></td>
                             <td><?php echo $order->quantity; ?></td>
                             <td><?php echo $order->price; ?></td>
-                            <td>
-                                <a href="/dashboard/invoice/<?php echo $order->id; ?>" class="btn btn-sm btn-info rounded-0">Invoice</a>
-                            </td>
+							<td><?php if($address[$i]->payment_status =='pending') { echo "Pending"; }else{ echo "Success";}?></td>                           
+							<td><?php echo $user->name; ?></td>
                         </tr>
+						<?php $i++;?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
