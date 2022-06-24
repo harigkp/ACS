@@ -19,7 +19,7 @@ function login(email,Password){
 						 
 						 window.location.href = '/dashboard';
 					 }else{
-						 window.location.href = '/dashboard';
+						 window.location.href = '/dashboard/orders';
 						 
 					 }
 			 }else{

@@ -245,3 +245,93 @@ function updatecart(changeq,unit_price,product_id){
     });
 	
 }
+
+
+/* Update quantity */
+
+function mySearch(serachdata){
+
+
+var myArray = serachdata.split("@");
+
+if(myArray[0]=='brand'){
+	checkAuth();
+	$('#loading').show();
+
+	 $.ajax({
+        url: "/productlist",
+        type: "post",
+        data: {'brand': myArray[1]},
+        success: function (response) {
+
+			 $('#loading').hide();
+           var objJSON = JSON.parse(response);
+
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
+	
+}
+if(myArray[0]=='gender'){
+checkAuth();
+	$('#loading').show();
+
+	 $.ajax({
+        url: "/productlist",
+        type: "post",
+        data: {'gender': myArray[1]},
+        success: function (response) {
+
+			 $('#loading').hide();
+           var objJSON = JSON.parse(response);
+		   
+		   if(objJSON.code==200){
+			   
+			   window.location.href = '/cart';
+			   
+		   }
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });	
+	
+}
+if(myArray[0]=='size'){
+checkAuth();
+	$('#loading').show();
+
+	 $.ajax({
+        url: "/productlist",
+        type: "post",
+        data: {'size': myArray[1]},
+        success: function (response) {
+
+			 $('#loading').hide();
+           var objJSON = JSON.parse(response);
+		   
+		   if(objJSON.code==200){
+			   
+			   window.location.href = '/cart';
+			   
+		   }
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });		
+	
+}
+	
+	
+alert(serachdata);
+	
+}
