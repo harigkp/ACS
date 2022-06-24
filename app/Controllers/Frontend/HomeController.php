@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
-
+use App\Models\Brand;
 
 use App\Helpers\ValidatorFactory;
 use PHPMailer\PHPMailer\Exception;
@@ -23,17 +23,6 @@ class HomeController
  
 	public function getIndex()
 	{ 
-		
-		/* $fetch_sliders = "SELECT * FROM `products` WHERE `active_on_slider`=1";
-		$query_sliders = $conn->prepare($fetch_sliders);
-		$query_sliders->execute();
-		$sliders = $query_sliders->fetch(PDO::FETCH_ASSOC);
-		
-		$fetch_product = "SELECT * FROM `products` WHERE `active`=TRUE";
-		$query_product = $conn->prepare($fetch_product);
-		$query_product->execute();
-		$products = $query_product->fetch(PDO::FETCH_ASSOC); */
-		
 		
 		$sliders  = Product::where('active_on_slider',true)->get();
 		$products = Product::where('active',true)->paginate(8);
@@ -62,6 +51,26 @@ class HomeController
 
 	public function getProductlist()
 	{
+		
+		if(isset($_POST['brand'])){
+			
+			$products 	= Product::where('active',true)->where('brand_id','=',$_POST['brand'])->get();
+		
+		}elseif(isset($_POST['gender'])){
+			
+			$products 	= Product::where('active',true)->where('gender','=',$_POST['gender'])->get();
+			
+			
+		}elseif(isset($_POST['size'])){
+			
+			$products 	= Product::where('active',true)->where('size','=',$_POST['size'])->get();
+			
+			
+		}
+
+
+		
+		
 		if (isset($_GET['search']) && ($_GET['search'] != NULL)) {
 
 			$search 	= $_GET['search'];
@@ -74,12 +83,20 @@ class HomeController
 			$products 	= $category[0]->products; 
 
 		} else {
-			$products 	= Product::where('active',true)->get();
+			$perPage = 6;
+			$products 	= Product::where('active',true)->paginate($perPage);
+			//echo $totalPageNumber = $products->count();
+			$updatedItems = $products->getCollection();
+			
+			$products->setCollection(collect($updatedItems));
+			
+			$pagination = new Paginator($products, $perPage);
 		}
 
 		$categories = Category::withCount('products')->get();
+		$brands  = Brand::where('active',1)->get();
 		
-		view('product-list', ['categories' => $categories, 'products' => $products]);
+		view('product-list', ['categories' => $categories, 'products' => $products, 'pagination' => $pagination, 'brands' => $brands]);
 	}
 
 
