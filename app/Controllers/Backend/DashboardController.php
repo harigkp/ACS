@@ -13,6 +13,12 @@ class DashboardController
 {
 	public function getIndex()
 	{
+		if(!$_SESSION['admin']){
+			header('Location: '.BASE.'/dashboard/orders');
+            exit;
+		}
+		
+		
 		view('backend/index');
 	}
 
@@ -29,15 +35,24 @@ class DashboardController
 		$product = new Product();
 		$user = new User();
 		
-		
-		
-		view('backend/orders/orders', [
+		if(!$_SESSION['admin']){
+			view('backend/orders/index', [
 				'address' => $address,
 				'product' => $product,
 				'orders'  => $orders,
 				'user'  => $user
-			]
-		);
+			]);
+		}else{
+			view('backend/orders/orders', [
+				'address' => $address,
+				'product' => $product,
+				'orders'  => $orders,
+				'user'  => $user
+			]);
+		}
+		
+
+		
 	}
 
 

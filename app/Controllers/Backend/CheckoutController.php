@@ -4,9 +4,9 @@ namespace App\Controllers\Backend;
 
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Address;
+use App\Models\Useraddress;
 use App\Helpers\ValidatorFactory;
-
+use Illuminate\Database\Capsule\Manager as Capsule;
 class CheckoutController
 {
 	public function getIndex()
@@ -16,14 +16,7 @@ class CheckoutController
 		
 		$user = User::find($_SESSION['userid']);
 		
-		$alluseradd = Address::find($_SESSION['userid']);
-		
-		/* echo "<pre>";
-		print_r($alluseradd);
-		die; */
-		
-		
-        
+		$alluseraddresses = Capsule::table('useraddresses')->where('user_id', '=', $_SESSION['userid'])->orderby('id','desc')->get();
         $cart = $_SESSION['cart'] ?? [];
         
         if(empty($cart)) {
@@ -40,7 +33,7 @@ class CheckoutController
 			'subtotal' 		=> $subtotal,
 			'shippingprice' => $shippingprice,
 			'grandtotal' 	=> $grandtotal,
-			'alluseradd' 	=> $alluseradd
+			'alluseraddresses' 	=> $alluseraddresses
 			
 		]);
     }
@@ -50,20 +43,20 @@ class CheckoutController
         $name       = $_POST['name'];
         $email      = $_POST['email'];
         $phone      = $_POST['phone'];
-        $address    = $_POST['address'];
+        $address    = $_POST['addresslist'];
 
         $validator = (new ValidatorFactory())->make(
 		    $data = [
 		    	'name' 	    => $name,
 		    	'email' 	=> $email,
 		    	'phone' 	=> $phone,
-		    	'address' 	=> $address
+		    	'billing_address_id' 	=> $address
 		    ],
 		    $rules = [
 		    	'name' 	    => 'required|max:255',
 		    	'email' 	=> 'required|max:255',
 		    	'phone' 	=> 'required|max:15',
-		    	'address' 	=> 'required'
+		    	'billing_address_id' 	=> 'required'
 		    ]
 		);
 
@@ -86,7 +79,7 @@ class CheckoutController
             'name' 	            => $name,
             'email' 	        => $email,
             'phone' 	        => $phone,
-            'billing_address' 	=> $address,
+            'billing_address_id' 	=> $address,
             'total_amount'      => $grandtotal,
             'payment_status'    => 'pending',
             'payment_details'   => 'cash on delivery'
@@ -116,20 +109,14 @@ class CheckoutController
 	 public function postUaddress()
     {
 
-
-
-	    $user_id      = $_POST['user_id'];
         $address      = $_POST['address'];
-		$addressc = Address::create([
-            'user_id'   => $user_id,
+		$addressc = Useraddress::create([
+            'user_id'   => $_SESSION['userid'],
             'address' 	=> $address
         ]);
-		
 
  		$outputdata = array( 'code' => '200','message' => 'success');							
-	    echo json_encode($outputdata);die; 
-		
-		
+	    echo json_encode($outputdata);die;
 	}
 	
 	
