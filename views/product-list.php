@@ -33,20 +33,20 @@
                     </div>
                     <div class="search-area mt-5">
                         <h2>Filter</h2>
-						<select name="brand" class="form-control rounded-0">
+						<select name="brand" class="form-control rounded-0"  onchange="return mySearch('brand@'+this.value)">
 						<option value="">Select Brand</option>
                             <?php foreach($brands as $brand) : ?>                              
                                 <option value="<?php echo $brand->id; ?>"><?php echo $brand->name; ?></option>								                      
                             <?php endforeach; ?>
 						 </select>
 						 <div class="my-0">&nbsp;</div>
-						<select name="gender" class="form-control rounded-0">
+						<select name="gender" class="form-control rounded-0" onchange="return mySearch('gender@'+this.value)">
 						<option value="">Select Gender</option>                             
                                 <option value="1">Men</option>
 								<option value="2">Women</option>								                      
 						 </select>	
 						 <div class="my-0">&nbsp;</div>
-                       <select name="size" class="form-control rounded-0">
+                       <select name="size" class="form-control rounded-0" onchange="return mySearch('size@'+this.value)">
                                 <option value="">Select size</option>
 								<option value="1">S</option>
 								<option value="2">M</option>
@@ -106,7 +106,7 @@
                                     <h3 class="title">
                                         <a href="/product/<?php echo $product->slug; ?>"><?php echo $product->title; ?></a>
                                     </h3>
-                                    <div class="price">$<?php echo $product->sale_price; ?>
+                                    <div class="price">$<?php echo $product['sale_price']; ?>
                                         <span>$<?php echo $product->price; ?></span>
                                     </div>
                                     <form action="/cart/addcart" method="post">
@@ -117,6 +117,15 @@
                             </div>
                         </div>
                         <?php endforeach; ?>
+						
+						<?php
+						
+						/*  echo "<pre>";
+						print_r($pagination);  */
+						
+						?>
+						
+						
                     </div>
                 </div>
 		    </div>

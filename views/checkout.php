@@ -9,7 +9,7 @@
 
 <div class="container">
 
-    <?php backendpartials('validator'); ?>
+    <?php //backendpartials('validator');	?>
 
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
@@ -53,12 +53,12 @@
 
                 <div class="mb-3">
                     <label for="firstName">First name</label>
-                    <input type="text" class="form-control" id="firstName" name="name" disabled value="<?php echo $user->name; ?>" required="">
+                    <input type="text" class="form-control" id="firstName" name="name" readonly value="<?php echo $user->name; ?>" required="">
                 </div>
 
                 <div class="mb-3">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" disabled name="email" value="<?php echo $user->email; ?>">
+                    <input type="email" class="form-control" id="email" readonly name="email" value="<?php echo $user->email; ?>">
                 </div>
 
                 <div class="mb-3">
@@ -72,21 +72,22 @@
                     
 					<div class="input-group mb-3">
 					  <select class="custom-select" id="addresslist" name="addresslist">
-					  <?php foreach ($alluseradd as $alluseradd) : ?>
-						<option value="<?php echo $alluseradd->id; ?>"><?php echo $alluseradd->address; ?></option>
+					  <?php foreach ($alluseraddresses as $alluseraddresse) : ?>
+						<option value="<?php echo $alluseraddresse->id; ?>"><?php echo $alluseraddresse->address; ?></option>
                       <?php endforeach; ?>						
 					  </select>
 					  
 					<div class="input-group-append">
 						<button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#exampleModalLong">Create Address</button>
 					  </div>
+					  
 					</div>
 					
-					<small class="form-text text-danger addresserror2"></small>
+					
 					
 					
                 </div>
-				
+				<small class="form-text text-danger addresserror2"></small>
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" id="checkoutbutton" type="button">Continue to checkout</button>
             </form>
@@ -94,24 +95,18 @@
 
     </div>
 </div>
-
-<?php include_once('partials/footer.php'); ?>
-
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
   <form class="needs-validation" id="frmaddid" action="/checkout/address" method="post">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><h3>Billing Address</h3></h5>
+        <h5 class="modal-title" id="exampleModalLongTitle"><h3>Billing Address   <span id="loaderID1" style="color:red;display:none">Please wait<img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span></h3></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-   
-		<input type="hidden" name="user_id" value="<?php echo $user->id; ?>"/>
 		<div class="mb-3">
 			<input type="text" class="form-control" id="address" placeholder="1234 Main St" name="address" required="">
 			<small class="form-text text-danger addresserror"></small>
@@ -119,6 +114,7 @@
 
       </div>
       <div class="modal-footer">
+	  
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="addressbutton">Save changes</button>
       </div>
@@ -126,10 +122,6 @@
 	</form>
   </div>
 </div>
-
-
-
-
 <script>
 jQuery(document).ready(function($){
 
@@ -153,7 +145,7 @@ jQuery(document).ready(function($){
 				return  false;			
 			}		
 		}
-		if(addresslist==""){
+		if(addresslist=="" || addresslist==null){
 			$('.addresserror2').html("The address field is required.");
 			return  false;			
 		}	
@@ -189,7 +181,7 @@ jQuery(document).ready(function($){
   /* Create address*/
   
      $('#addressbutton').on('click', function(){
-		
+
 		var address = $('#address').val();
 		if(address==""){
 			$('.addresserror').html("The address field is required.");
@@ -198,7 +190,7 @@ jQuery(document).ready(function($){
 		
 
 		let data1 = new FormData($("#frmaddid")[0]);
-          $('#loaderID').show();
+          $('#loaderID1').show();
 		  $.ajax({
 			url: '/checkout/uaddress',
 			type: 'POST',
@@ -206,17 +198,14 @@ jQuery(document).ready(function($){
 			processData: false,
 			contentType: false,
 			success: function(response) {
-			var objJSON = JSON.parse(response);
-	
-					$('#loaderID').hide();
-					var objJSON = JSON.parse(response);
-					
+			var objJSON = JSON.parse(response);	
+					$('#loaderID1').hide();
 				   if(objJSON.code==200){					 
 						 window.location.href = '/checkout';
 					 }else{
-						 $("#errorc").html(objJSON.message);
+						 $("#loaderID1").html(objJSON.message);
 						 
-					 }
+					 } 
 			},
 			error: function(response) {
 			  console.log('error', response);
@@ -231,3 +220,4 @@ jQuery(document).ready(function($){
 		
 		
 </script>
+<?php include_once('partials/footer.php'); ?>
