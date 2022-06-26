@@ -113,9 +113,74 @@
                                         <input type="hidden" name="product_id" value="<?php echo $product->id; ?>">
                                         <button type="submit" class="add-to-cart p-0">+ Add To Cart</button>
                                     </form>
+									<button style="color:blue" class="add-to-cart p-0" type="button" data-toggle="modal" data-target="#reviewModalLong<?php echo $product->id;?>">Review</button> | <button style="color:blue" class="add-to-cart p-0" type="button" data-toggle="modal" data-target="#commentModalLong<?php echo $product->id;?>">Comment</button>	</h3>
                                 </div>
                             </div>
                         </div>
+						
+						
+<!-- Modal review-->
+<div class="modal fade" id="reviewModalLong<?php echo $product->id;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <form class="needs-validation" id="frmreview<?php echo $product->id;?>" action="/checkout/address" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><h3>Review<span id="loaderID<?php echo $product->id;?>" style="color:red;display:none">Please wait<img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span></h3></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<div class="mb-3">
+			<input type="text" class="form-control" id="rtxt<?php echo $product->id;?>" placeholder="Enter Review" name="rtxt<?php echo $product->id;?>" required="">
+			<small class="form-text text-danger reviewerror<?php echo $product->id;?>"></small>
+		</div>
+                    <span id="loaderID<?php echo $product->id;?>" style="color:red;display:none;">Please wait<img src="<?php echo BASE;?>/assets/images/loading.gif"/><span>
+      </div>
+      <div class="modal-footer">
+	  
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="review@<?php echo $product->id;?>" onclick="return savereview(this.id);">Save changes</button>
+      </div>
+    </div>
+	</form>
+  </div>
+</div>
+
+<!-- Modal comment -->
+
+<div class="modal fade" id="commentModalLong<?php echo $product->id;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <form class="needs-validation" id="frmreview<?php echo $product->id;?>" action="/checkout/address" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><h3>Comment<span id="loaderIDcomment" style="color:red;display:none">Please wait<img src="http://<?php echo $_SERVER['HTTP_HOST']?>/assets/images/loading.gif"/><span></h3></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<div class="mb-3">
+			<input type="text" class="form-control" id="ctxt<?php echo $product->id;?>" placeholder="Enter Comment" name="ctxt<?php echo $product->id;?>" required="">
+			<small class="form-text text-danger commenterror<?php echo $product->id;?>"></small>
+		</div>
+                    <span id="loaderIDc<?php echo $product->id;?>" style="color:red;display:none;">Please wait<img src="<?php echo BASE;?>/assets/images/loading.gif"/><span>
+      </div>
+      <div class="modal-footer">
+	  
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="comment@<?php echo $product->id;?>" onclick="return savecomment(this.id);">Save changes</button>
+      </div>
+    </div>
+	</form>
+  </div>
+</div>						
+						
+						
+						
+						
+						
+						
                         <?php endforeach; ?>
 						
 						<?php
@@ -133,5 +198,83 @@
 		</div>
 
 	</div>
-
 <?php include_once('partials/footer.php'); ?>
+
+<script>
+function savereview(reviewid){
+	
+	const reviewArray = reviewid.split("@");
+	
+	if($("#rtxt"+reviewArray[1]).val()=="" || $("#rtxt"+reviewArray[1]).val()==null){
+		
+          $(".reviewerror"+reviewArray[1]).html("Please enter review!");
+		  return false;		
+	}
+	
+	$('#loaderID'+reviewArray[1]).show();
+	
+		 $.ajax({
+        url: "/review",
+        type: "post",
+        data: {'review': $("#rtxt"+reviewArray[1]).val(),'product_id': reviewArray[1] },
+        success: function (response) {
+
+			 $('#loaderID'+reviewArray[1]).hide();
+           var objJSON = JSON.parse(response);
+		   alert(objJSON.code)
+		    if(objJSON.code==200){
+			   
+			   window.location.href = '/productlist';
+			   
+		   } 
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
+	
+	
+}
+
+
+function savecomment(commentid){
+	
+	const commentArray = commentid.split("@");
+	alert()
+	
+	if($("#ctxt"+commentArray[1]).val()=="" || $("#ctxt"+commentArray[1]).val()==null){
+		
+          $(".commenterror"+commentArray[1]).html("Please enter comment!");
+		  return false;		
+	}
+	
+	$('#loaderIDc'+commentArray[1]).show();
+	
+		 $.ajax({
+        url: "/comment",
+        type: "post",
+        data: {'comment': $("#ctxt"+commentArray[1]).val(),'product_id': commentArray[1] },
+        success: function (response) {
+
+			 $('#loaderIDc'+commentArray[1]).hide();
+           var objJSON = JSON.parse(response);
+		   alert(objJSON.code)
+		    if(objJSON.code==200){
+			   
+			   window.location.href = '/productlist';
+			   
+		   } 
+		   		   
+		  // alert(objJSON)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
+	
+	
+}
+
+</script>
