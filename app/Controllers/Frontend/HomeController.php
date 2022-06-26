@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Review;
+use App\Models\Comment;
 
 use App\Helpers\ValidatorFactory;
 use PHPMailer\PHPMailer\Exception;
@@ -500,6 +502,33 @@ catch (\Firebase\JWT\ExpiredException $e) {
 		redirect('/login');
 	}
 
+
+
+	public function postReview()
+	{
+		
+		$review = Review::create([
+				'user_id' 		=> $_SESSION['userid'],
+				'product_id'    => $_POST['product_id'],
+				'review' 	=> $_POST['review']
+			]);
+			
+			$outputdata = array( 'code' => '200','message' => 'Review created');							
+			echo json_encode($outputdata);die;
+	}
+
+	public function postComment()
+	{
+		
+		$comment = Comment::create([
+				'user_id' 		=> $_SESSION['userid'],
+				'product_id'    => $_POST['product_id'],
+				'comment' 	=> $_POST['comment']
+			]);
+			
+			$outputdata = array( 'code' => '200','message' => 'Review created');							
+			echo json_encode($outputdata);die;
+	}
 
 
 	/*
