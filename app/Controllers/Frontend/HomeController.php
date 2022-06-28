@@ -25,6 +25,10 @@ class HomeController
  
 	public function getIndex()
 	{ 
+		if(!$_SESSION['userid']){			
+			redirect('/login');			
+		}
+		
 		
 		$sliders  = Product::where('active_on_slider',true)->get();
 		$products = Product::where('active',true)->paginate(8);
@@ -53,6 +57,11 @@ class HomeController
 
 	public function getProductlist()
 	{
+		
+	   if(!$_SESSION['userid']){			
+			redirect('/login');			
+		}
+		
 		
 		if(isset($_POST['brand'])){
 			
