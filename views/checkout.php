@@ -131,8 +131,8 @@ jQuery(document).ready(function($){
 		
 		var phone = $('#phone').val();
 		var addresslist = $('#addresslist').val();
-		alert(addresslist);
-		alert(phone.length);
+		/* alert(addresslist);
+		alert(phone.length); */
 		if(phone==""){
 			$('.phoneerror').html("The phone field is required.");
 			return  false;			
