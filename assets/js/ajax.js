@@ -259,16 +259,15 @@ if(myArray[0]=='brand'){
 	$('#loading').show();
 
 	 $.ajax({
-        url: "/productlist",
+        url: "/searchproductlist",
         type: "post",
         data: {'brand': myArray[1]},
         success: function (response) {
 
 			 $('#loading').hide();
-           var objJSON = JSON.parse(response);
-
-		   		   
-		  // alert(objJSON)
+			 var objJSON = JSON.parse(JSON.stringify(response));
+		     $("#mysearch").html(objJSON);
+			 
         },
         error: function(jqXHR, textStatus, errorThrown) {
            console.log(textStatus, errorThrown);
@@ -281,21 +280,14 @@ checkAuth();
 	$('#loading').show();
 
 	 $.ajax({
-        url: "/productlist",
+        url: "/searchproductlist",
         type: "post",
         data: {'gender': myArray[1]},
         success: function (response) {
-
-			 $('#loading').hide();
-           var objJSON = JSON.parse(response);
 		   
-		   if(objJSON.code==200){
-			   
-			   window.location.href = '/cart';
-			   
-		   }
-		   		   
-		  // alert(objJSON)
+			 $('#loading').hide();
+			 var objJSON = JSON.parse(JSON.stringify(response));
+		     $("#mysearch").html(objJSON);
         },
         error: function(jqXHR, textStatus, errorThrown) {
            console.log(textStatus, errorThrown);
@@ -308,21 +300,14 @@ checkAuth();
 	$('#loading').show();
 
 	 $.ajax({
-        url: "/productlist",
+        url: "/searchproductlist",
         type: "post",
         data: {'size': myArray[1]},
         success: function (response) {
-
-			 $('#loading').hide();
-           var objJSON = JSON.parse(response);
 		   
-		   if(objJSON.code==200){
-			   
-			   window.location.href = '/cart';
-			   
-		   }
-		   		   
-		  // alert(objJSON)
+			 $('#loading').hide();
+			 var objJSON = JSON.parse(JSON.stringify(response));
+		     $("#mysearch").html(objJSON);
         },
         error: function(jqXHR, textStatus, errorThrown) {
            console.log(textStatus, errorThrown);
@@ -332,6 +317,6 @@ checkAuth();
 }
 	
 	
-alert(serachdata);
+/* alert(serachdata); */
 	
 }
