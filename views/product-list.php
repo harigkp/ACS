@@ -12,17 +12,17 @@
 
 			<div class="row">
                 <div class="col-md-3 products-sidebar">
-                    <div class="category-area">
+<!--                     <div class="category-area">
                         <h2>Categoties</h2>
                         <ul>
-                            <?php foreach($categories as $category) : ?>
+                            <?php //foreach($categories as $category) : ?>
                                 <li>
-                                    <a href="/productlist/?category=<?php echo $category->slug; ?>">
-                                        <?php echo $category->name; ?>
-                                        <span><?php echo $category->products_count; ?></span>
+                                    <a href="/productlist/?category=<?php //echo $category->slug; ?>">
+                                        <?php //echo $category->name; ?>
+                                        <span><?php //echo $category->products_count; ?></span>
                                     </a>
                                 </li>
-                            <?php endforeach; ?>
+                            <?php //endforeach; ?>
                         </ul>
                     </div>
                     <div class="search-area mt-5">
@@ -30,7 +30,7 @@
                         <form action="" method="GET">
                             <input type="search" name="search" class="search-box">
                         </form>
-                    </div>
+                    </div> -->
                     <div class="search-area mt-5">
                         <h2>Filter</h2>
 						<select name="brand" class="form-control rounded-0"  onchange="return mySearch('brand@'+this.value)">
@@ -56,7 +56,7 @@
                         </select>					 
                     </div>					
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-9" id="mysearch">
                     <div class="row">
                         <?php foreach($products as $product) : ?>
 						
@@ -202,7 +202,7 @@
 
 <script>
 function savereview(reviewid){
-	
+	checkAuth();
 	const reviewArray = reviewid.split("@");
 	
 	if($("#rtxt"+reviewArray[1]).val()=="" || $("#rtxt"+reviewArray[1]).val()==null){
@@ -221,7 +221,7 @@ function savereview(reviewid){
 
 			 $('#loaderID'+reviewArray[1]).hide();
            var objJSON = JSON.parse(response);
-		   alert(objJSON.code)
+		   
 		    if(objJSON.code==200){
 			   
 			   window.location.href = '/productlist';
@@ -240,9 +240,8 @@ function savereview(reviewid){
 
 
 function savecomment(commentid){
-	
+	checkAuth();
 	const commentArray = commentid.split("@");
-	alert()
 	
 	if($("#ctxt"+commentArray[1]).val()=="" || $("#ctxt"+commentArray[1]).val()==null){
 		
